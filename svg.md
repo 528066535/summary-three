@@ -130,3 +130,104 @@ points 属性定义多边形每个角的 x 和 y 坐标。每个点是按照顺�
 #### 12. Z
 描述：闭合。
 
+## 三. svg 效果
+
+### Stroke 属性
+
+线条样式
+
+#### 1. stroke
+
+线条的颜色
+
+#### 2. stroke-width
+
+线条的宽度
+
+#### 3. stroke-linecap
+
+线条两端样式,butt表示粗大的一端,round表示圆滑的,
+
+```
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <g fill="none" stroke="black" stroke-width="6">
+    <path stroke-linecap="butt" d="M5 20 l215 0" />
+    <path stroke-linecap="round" d="M5 40 l215 0" />
+    <path stroke-linecap="square" d="M5 60 l215 0" />
+  </g>
+</svg>
+```
+
+#### 4. stroke-dasharray
+
+strokedasharray属性用于创建虚线
+
+### 滤镜
+
+实际上我们是通过告诉 CSS 滤镜所拥有的 ID，然后再把滤镜应用于 SVG 的方式来实现。
+
+```
+<svg version="1.1">
+  <defs>
+    <filter id="f1" x="0" y="0">
+<feGaussianBlur in="SourceGraphic" 
+stdDeviation="15" result="blr" />
+		<feMerge result="final">
+                <feMergeNode in="blr" />
+                <feMergeNode in="comp" />
+            </feMerge>
+    </filter>
+  </defs>
+  <rect width="90" height="90" stroke="green" stroke-width="3" fill="yellow" filter="url(#f1)" />
+</svg>
+```
+
+### 模糊效果
+
+所有互联网的SVG滤镜定义在<defs>元素中。<defs>元素定义短并含有特殊元素（如滤镜）定义。<filter>标签用来定义SVG滤镜。
+   
+```
+<svg version="1.1">
+  <defs>
+    <filter id="f1" x="0" y="0">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+    </filter>
+  </defs>
+  <rect width="90" height="90" stroke="green" stroke-width="1" fill="yellow" filter="url(#f1)" />
+</svg>
+```
+
+<filter>元素id属性定义一个滤镜的唯一名称
+<feGaussianBlur>元素定义模糊效果
+in="SourceGraphic"这个部分定义了由整个图像创建效果
+stdDeviation属性定义模糊量
+   
+### 阴影效果
+
+<feOffset>元素是用于创建阴影效果。我们的想法是采取一个SVG图形（图像或元素）并移动它在xy平面上一点儿。
+
+```
+<svg version="1.1">
+  <defs>
+    <filter id="f1" x="0" y="0" width="200%" height="200%">
+      <feOffset result="offOut" in="SourceGraphic" dx="20" dy="20" />
+      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="10" />
+      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+    </filter>
+  </defs>
+  <rect width="90" height="90" stroke="green" stroke-width="3"
+  fill="yellow" filter="url(#f1)" />
+</svg>
+```
+
+### 渐变 
+
+<linearGradient>元素用于定义线性渐变。
+
+<linearGradient>标签必须嵌套在<defs>的内部。<defs>标签是definitions的缩写，它可对诸如渐变之类的特殊元素进行定义。
+
+线性渐变可以定义为水平，垂直或角渐变：
+
+当y1和y2相等，而x1和x2不同时，可创建水平渐变
+当x1和x2相等，而y1和y2不同时，可创建垂直渐变
+当x1和x2不同，且y1和y2不同时，可创建角形渐变
